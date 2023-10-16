@@ -1,0 +1,30 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Upload a Build Artifact
+    - uses: actions/upload-artifact@v3.1.3
+      with:
+        path: Dockerfile
+        retention-days: 90
+    - name: Repository Dispatch
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{secrets.PERSONAL_PAT}}
+        script: |
+          await github.repos.createDispatchEvent({
+            owner: context.repo.owner,
+            repo: 'scan-actions',
+            event_type: 'scan_image',
+            client_payload: {
+              path: 'Dockerfile'
+            }
+          });
+    

@@ -19,7 +19,7 @@ jobs:
       with:
         github-token: ${{secrets.PERSONAL_PAT}}
         script: |
-          await github.rest.repos.createWorkflowDispatch({
+          await github.rest.repos.createDispatchEvent({
             owner: context.repo.owner,
             repo: 'scan-actions',
             event_type: 'scan_image',
